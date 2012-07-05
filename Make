@@ -1,0 +1,15 @@
+-R . LegacyRing
+g_ring.ml4
+ring.ml
+legacy_ring_plugin.mllib
+LegacyArithRing.v
+LegacyNArithRing.v
+LegacyRing_theory.v
+LegacyRing.v
+LegacyZArithRing.v
+Ring_abstract.v
+Ring_normalize.v
+Setoid_ring_normalize.v
+Setoid_ring_theory.v
+Setoid_ring.v
+Ring_equiv.v
