@@ -30,7 +30,7 @@ define donewline
 
 
 endef
-includecmdwithout@ = $(eval $(subst @,$(donewline),$(shell { $(1) | tr '\n' '@'; })))
+includecmdwithout@ = $(eval $(subst @,$(donewline),$(shell { $(1) | tr -d '\r' | tr '\n' '@'; })))
 $(call includecmdwithout@,$(COQBIN)coqtop -config)
 
 ##########################
@@ -69,7 +69,6 @@ COQSRCLIBS?=-I $(COQLIB)kernel -I $(COQLIB)lib \
   -I $(COQLIB)plugins/cc \
   -I $(COQLIB)plugins/decl_mode \
   -I $(COQLIB)plugins/extraction \
-  -I $(COQLIB)plugins/field \
   -I $(COQLIB)plugins/firstorder \
   -I $(COQLIB)plugins/fourier \
   -I $(COQLIB)plugins/funind \
@@ -77,7 +76,6 @@ COQSRCLIBS?=-I $(COQLIB)kernel -I $(COQLIB)lib \
   -I $(COQLIB)plugins/nsatz \
   -I $(COQLIB)plugins/omega \
   -I $(COQLIB)plugins/quote \
-  -I $(COQLIB)plugins/ring \
   -I $(COQLIB)plugins/romega \
   -I $(COQLIB)plugins/rtauto \
   -I $(COQLIB)plugins/setoid_ring \
@@ -85,10 +83,10 @@ COQSRCLIBS?=-I $(COQLIB)kernel -I $(COQLIB)lib \
   -I $(COQLIB)plugins/xml
 ZFLAGS=$(OCAMLLIBS) $(COQSRCLIBS) -I $(CAMLP4LIB)
 
-CAMLC?=$(OCAMLC) -c -rectypes
-CAMLOPTC?=$(OCAMLOPT) -c -rectypes
-CAMLLINK?=$(OCAMLC) -rectypes
-CAMLOPTLINK?=$(OCAMLOPT) -rectypes
+CAMLC?=$(OCAMLC) -c
+CAMLOPTC?=$(OCAMLOPT) -c
+CAMLLINK?=$(OCAMLC)
+CAMLOPTLINK?=$(OCAMLOPT)
 GRAMMARS?=grammar.cma
 ifeq ($(CAMLP4),camlp5)
 CAMLP4EXTEND=pa_extend.cmo q_MLast.cmo pa_macro.cmo
@@ -163,6 +161,11 @@ CMAFILES:=$(MLLIBFILES:.mllib=.cma)
 CMXAFILES:=$(CMAFILES:.cma=.cmxa)
 CMIFILES=$(ALLCMOFILES:.cmo=.cmi)
 CMXSFILES=$(CMXFILES:.cmx=.cmxs) $(CMXAFILES:.cmxa=.cmxs)
+ifeq '$(HASNATDYNLINK)' 'true'
+HASNATDYNLINK_OR_EMPTY := yes
+else
+HASNATDYNLINK_OR_EMPTY :=
+endif
 
 #######################################
 #                                     #
@@ -170,7 +173,7 @@ CMXSFILES=$(CMXFILES:.cmx=.cmxs) $(CMXAFILES:.cmxa=.cmxs)
 #                                     #
 #######################################
 
-all: $(VOFILES) $(CMOFILES) $(CMAFILES) $(if ifeq '$(HASNATDYNLINK)' 'true',$(CMXSFILES)) 
+all: $(VOFILES) $(CMOFILES) $(CMAFILES) $(if $(HASNATDYNLINK_OR_EMPTY),$(CMXSFILES)) 
 
 spec: $(VIFILES)
 
@@ -227,7 +230,7 @@ install-natdynlink:
 	 install -m 0644 $$i $(DSTROOT)$(COQLIBINSTALL)/LegacyRing/$$i; \
 	done
 
-install:$(if ifeq '$(HASNATDYNLINK)' 'true',install-natdynlink)
+install:$(if $(HASNATDYNLINK_OR_EMPTY),install-natdynlink)
 	cd . && for i in $(VOFILES) $(CMOFILES) $(CMIFILES) $(CMAFILES); do \
 	 install -d `dirname $(DSTROOT)$(COQLIBINSTALL)/LegacyRing/$$i`; \
 	 install -m 0644 $$i $(DSTROOT)$(COQLIBINSTALL)/LegacyRing/$$i; \
@@ -300,6 +303,9 @@ Makefile: Make
 %.ml.d: %.ml
 	$(OCAMLDEP) -slash $(OCAMLLIBS) "$<" > "$@" || ( RV=$$?; rm -f "$@"; exit $${RV} )
 
+%.cmxs: %.cmxa
+	$(CAMLOPTLINK) $(ZDEBUG) $(ZFLAGS) -linkall -shared -o $@ $<
+
 %.cmxs: %.cmx
 	$(CAMLOPTLINK) $(ZDEBUG) $(ZFLAGS) -shared -o $@ $<
 
@@ -308,9 +314,6 @@ Makefile: Make
 
 %.cmxa: | %.mllib
 	$(CAMLOPTLINK) $(ZDEBUG) $(ZFLAGS) -a -o $@ $^
-
-%.cmxs: %.cmxa
-	$(CAMLOPTLINK) $(ZDEBUG) $(ZFLAGS) -linkall -shared -o $@ $<
 
 %.mllib.d: %.mllib
 	$(COQDEP) -slash $(COQLIBS) -c "$<" > "$@" || ( RV=$$?; rm -f "$@"; exit $${RV} )
