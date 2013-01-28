@@ -289,7 +289,7 @@ let guess_theory a =
 
 let unbox = function
   | Some w -> w
-  | None -> anomaly "Ring : Not in case of a setoid ring."
+  | None -> anomaly ~label:"Ring" (Pp.str "Not in case of a setoid ring.")
 
 (* Protects the convertibility test against undue exceptions when using it
    with untyped terms *)
