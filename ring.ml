@@ -134,11 +134,7 @@ let mkLApp(fc,v) = mkApp(Lazy.force fc, v)
 
 (*********** Useful types and functions ************)
 
-module OperSet =
-  Set.Make (struct
-	      type t = global_reference
-	      let compare = (RefOrdered.compare : t->t->int)
-	    end)
+module OperSet = Set.Make (RefOrdered)
 
 type morph =
     { plusm : constr;
@@ -168,7 +164,7 @@ type theory =
 (* Theories are stored in a table which is synchronised with the Reset
    mechanism. *)
 
-module Cmap = Map.Make(struct type t = constr let compare = constr_ord end)
+module Cmap = Map.Make(Constr)
 
 let theories_map = Summary.ref ~name:"tactic-ring-table" Cmap.empty
 

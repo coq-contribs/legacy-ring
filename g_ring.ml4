@@ -21,7 +21,7 @@ END
 let cset_of_constrarg_list l =
   List.fold_right ConstrSet.add (List.map constr_of l) ConstrSet.empty
 
-VERNAC COMMAND EXTEND AddRing
+VERNAC COMMAND EXTEND AddRing CLASSIFIED AS SIDEFF
   [ "Add" "Legacy" "Ring"
           constr(a) constr(aplus) constr(amult) constr(aone) constr(azero)
           constr(aopp) constr(aeq) constr(t) "[" ne_constr_list(l) "]" ]
