@@ -817,10 +817,10 @@ let raw_polynom th op lc gl =
 				     c'''i; ci; c'i_eq_c''i |]))))
 	      (tclTHENS
 		 (tclORELSE
-                   (Equality.general_rewrite true
-		     Locus.AllOccurrences true false c'i_eq_c''i)
-                   (Equality.general_rewrite false
+                   (Proofview.V82.of_tactic (Equality.general_rewrite true
 		     Locus.AllOccurrences true false c'i_eq_c''i))
+                   (Proofview.V82.of_tactic (Equality.general_rewrite false
+		     Locus.AllOccurrences true false c'i_eq_c''i)))
                  [tac]))
 	 else
            (tclORELSE
@@ -839,7 +839,7 @@ let raw_polynom th op lc gl =
   polynom_tac gl
 
 let guess_eq_tac th =
-  (tclORELSE reflexivity
+  (tclORELSE (Proofview.V82.of_tactic reflexivity)
      (tclTHEN
 	polynom_unfold_tac
         (tclTHEN
@@ -849,13 +849,13 @@ let guess_eq_tac th =
 		 (apply (mkApp(build_coq_f_equal2 (),
 		               [| th.th_a; th.th_a; th.th_a;
 				  th.th_plus |])))
-		 reflexivity))
+		 (Proofview.V82.of_tactic reflexivity)))
 	   (tclTRY
 	      (tclTHENLAST
 		 (apply (mkApp(build_coq_f_equal2 (),
 			       [| th.th_a; th.th_a; th.th_a;
 				  th.th_plus |])))
-		 reflexivity)))))
+		 (Proofview.V82.of_tactic reflexivity))))))
 
 let guess_equiv_tac th =
   (tclORELSE (apply (mkLApp(coq_seq_refl,

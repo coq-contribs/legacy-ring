@@ -13,7 +13,7 @@ open Ring
 open Tacticals
 
 TACTIC EXTEND ring
-| [ "legacy" "ring" constr_list(l) ] -> [ polynom l ]
+| [ "legacy" "ring" constr_list(l) ] -> [ Proofview.V82.tactic (polynom l) ]
 END
 
 (* The vernac commands "Add Ring" and co *)
