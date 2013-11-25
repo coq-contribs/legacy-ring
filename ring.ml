@@ -30,7 +30,6 @@ open Closure
 open Tacred
 open Tactics
 open Pattern
-open Hiddentac
 open Nametab
 open Quote
 open Mod_subst
@@ -810,8 +809,8 @@ let raw_polynom th op lc gl =
 	 then
            (tclORELSE
               (tclORELSE
-		 (h_exact c'i_eq_c''i)
-		 (h_exact (mkLApp(coq_seq_sym,
+		 (exact_check c'i_eq_c''i)
+		 (exact_check (mkLApp(coq_seq_sym,
 				  [| th.th_a; (unbox th.th_equiv);
                                      (unbox th.th_setoid_th);
 				     c'''i; ci; c'i_eq_c''i |]))))
@@ -825,14 +824,14 @@ let raw_polynom th op lc gl =
 	 else
            (tclORELSE
               (tclORELSE
-		 (h_exact c'i_eq_c''i)
-		 (h_exact (mkApp(build_coq_eq_sym (),
+		 (exact_check c'i_eq_c''i)
+		 (exact_check (mkApp(build_coq_eq_sym (),
 				 [|th.th_a; c'''i; ci; c'i_eq_c''i |]))))
 	      (tclTHENS
 		 (elim_type
 		    (mkApp(build_coq_eq (), [|th.th_a; c'''i; ci |])))
 		 [ tac;
-                   h_exact c'i_eq_c''i ]))
+                   exact_check c'i_eq_c''i ]))
 )
       lc ltriplets polynom_unfold_tac
   in
