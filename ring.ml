@@ -35,7 +35,7 @@ open Quote
 open Mod_subst
 
 let mt_evd = Evd.empty
-let constr_of c = Constrintern.interp_constr mt_evd (Global.env()) c
+let constr_of c = fst (Constrintern.interp_constr mt_evd (Global.env()) c)
 
 let ring_dir = ["LegacyRing"]
 let setoids_dir = ["Coq";"Setoids"]
@@ -825,11 +825,11 @@ let raw_polynom th op lc gl =
            (tclORELSE
               (tclORELSE
 		 (exact_check c'i_eq_c''i)
-		 (exact_check (mkApp(build_coq_eq_sym (),
+		 (exact_check (mkApp(Universes.constr_of_reference (build_coq_eq_sym ()),
 				 [|th.th_a; c'''i; ci; c'i_eq_c''i |]))))
 	      (tclTHENS
 		 (elim_type
-		    (mkApp(build_coq_eq (), [|th.th_a; c'''i; ci |])))
+		    (mkApp(Universes.constr_of_reference (build_coq_eq ()), [|th.th_a; c'''i; ci |])))
 		 [ tac;
                    exact_check c'i_eq_c''i ]))
 )
@@ -845,13 +845,13 @@ let guess_eq_tac th =
 	   (* Normalized sums associate on the right *)
 	   (tclREPEAT
 	      (tclTHENFIRST
-		 (apply (mkApp(build_coq_f_equal2 (),
+		 (apply (mkApp(Universes.constr_of_global (build_coq_f_equal2 ()),
 		               [| th.th_a; th.th_a; th.th_a;
 				  th.th_plus |])))
 		 (Proofview.V82.of_tactic reflexivity)))
 	   (tclTRY
 	      (tclTHENLAST
-		 (apply (mkApp(build_coq_f_equal2 (),
+		 (apply (mkApp(Universes.constr_of_global (build_coq_f_equal2 ()),
 			       [| th.th_a; th.th_a; th.th_a;
 				  th.th_plus |])))
 		 (Proofview.V82.of_tactic reflexivity))))))
