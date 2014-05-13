@@ -12,6 +12,8 @@ open Quote
 open Ring
 open Tacticals
 
+DECLARE PLUGIN "legacy_ring_plugin"
+
 TACTIC EXTEND ring
 | [ "legacy" "ring" constr_list(l) ] -> [ Proofview.V82.tactic (polynom l) ]
 END
