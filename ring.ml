@@ -311,7 +311,7 @@ let add_theory want_ring want_abstract want_setoid a aequiv asetth amorph aplus 
     (str "A (Semi-)(Setoid-)Ring Structure is already declared for " ++
        pr_lconstr a);
   let env = Global.env () in
-    if (want_ring & want_setoid & (
+    if (want_ring && want_setoid && (
 	not (implement_theory env t coq_Setoid_Ring_Theory
 	  [| a; (unbox aequiv); aplus; amult; aone; azero; (unbox aopp); aeq|])
         ||
@@ -320,7 +320,7 @@ let add_theory want_ring want_abstract want_setoid a aequiv asetth amorph aplus 
         not (states_compatibility_for env aplus amult aopp (unbox amorph))
         )) then
       errorlabstrm "addring" (str "Not a valid Setoid-Ring theory");
-    if (not want_ring & want_setoid & (
+    if (not want_ring && want_setoid && (
         not (implement_theory env t coq_Semi_Setoid_Ring_Theory
 	  [| a; (unbox aequiv); aplus; amult; aone; azero; aeq|]) ||
 	not (implement_theory env (unbox asetth) coq_Setoid_Theory
@@ -328,11 +328,11 @@ let add_theory want_ring want_abstract want_setoid a aequiv asetth amorph aplus 
         not (states_compatibility_for env aplus amult aopp (unbox amorph))))
     then
       errorlabstrm "addring" (str "Not a valid Semi-Setoid-Ring theory");
-    if (want_ring & not want_setoid &
+    if (want_ring && not want_setoid &&
 	not (implement_theory env t coq_Ring_Theory
 	  [| a; aplus; amult; aone; azero; (unbox aopp); aeq |])) then
       errorlabstrm "addring" (str "Not a valid Ring theory");
-    if (not want_ring & not want_setoid &
+    if (not want_ring && not want_setoid &&
 	not (implement_theory env t coq_Semi_Ring_Theory
 	  [| a; aplus; amult; aone; azero; aeq |])) then
       errorlabstrm "addring" (str "Not a valid Semi-Ring theory");
@@ -800,20 +800,15 @@ let raw_polynom th op lc gl =
   let polynom_tac =
     List.fold_right2
       (fun ci (c'i, c''i, c'i_eq_c''i) tac ->
-         let c'''i =
-	   if !term_quality then polynom_unfold_tac_in_term gl c''i else c''i
-	 in
-         if !term_quality && safe_pf_conv_x gl c'''i ci then
-	   tac (* convertible terms *)
-         else if th.th_setoid
+         if th.th_setoid
 	 then
            (tclORELSE
               (tclORELSE
-		 (exact_check c'i_eq_c''i)
-		 (exact_check (mkLApp(coq_seq_sym,
+		 (Proofview.V82.of_tactic (exact_check c'i_eq_c''i))
+		 (Proofview.V82.of_tactic (exact_check (mkLApp(coq_seq_sym,
 				  [| th.th_a; (unbox th.th_equiv);
                                      (unbox th.th_setoid_th);
-				     c'''i; ci; c'i_eq_c''i |]))))
+				     c''i; ci; c'i_eq_c''i |])))))
 	      (tclTHENS
 		 (tclORELSE
                    (Proofview.V82.of_tactic (Equality.general_rewrite true
@@ -824,14 +819,14 @@ let raw_polynom th op lc gl =
 	 else
            (tclORELSE
               (tclORELSE
-		 (exact_check c'i_eq_c''i)
-		 (exact_check (mkApp(Universes.constr_of_reference (build_coq_eq_sym ()),
-				 [|th.th_a; c'''i; ci; c'i_eq_c''i |]))))
+		 (Proofview.V82.of_tactic (exact_check c'i_eq_c''i))
+		 (Proofview.V82.of_tactic (exact_check (mkApp(Universes.constr_of_reference (build_coq_eq_sym ()),
+				 [|th.th_a; c''i; ci; c'i_eq_c''i |])))))
 	      (tclTHENS
 		 (elim_type
-		    (mkApp(Universes.constr_of_reference (build_coq_eq ()), [|th.th_a; c'''i; ci |])))
+		    (mkApp(Universes.constr_of_reference (build_coq_eq ()), [|th.th_a; c''i; ci |])))
 		 [ tac;
-                   exact_check c'i_eq_c''i ]))
+                   Proofview.V82.of_tactic (exact_check c'i_eq_c''i)]))
 )
       lc ltriplets polynom_unfold_tac
   in
