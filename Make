@@ -1,3 +1,4 @@
+-I .
 -R . LegacyRing
 g_ring.ml4
 ring.ml
