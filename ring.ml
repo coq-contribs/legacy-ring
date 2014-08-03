@@ -823,8 +823,8 @@ let raw_polynom th op lc gl =
 		 (Proofview.V82.of_tactic (exact_check (mkApp(Universes.constr_of_reference (build_coq_eq_sym ()),
 				 [|th.th_a; c''i; ci; c'i_eq_c''i |])))))
 	      (tclTHENS
-		 (elim_type
-		    (mkApp(Universes.constr_of_reference (build_coq_eq ()), [|th.th_a; c''i; ci |])))
+		 (Proofview.V82.of_tactic (elim_type
+		    (mkApp(Universes.constr_of_reference (build_coq_eq ()), [|th.th_a; c''i; ci |]))))
 		 [ tac;
                    Proofview.V82.of_tactic (exact_check c'i_eq_c''i)]))
 )
