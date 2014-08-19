@@ -836,31 +836,31 @@ let guess_eq_tac th =
   (tclORELSE (Proofview.V82.of_tactic reflexivity)
      (tclTHEN
 	polynom_unfold_tac
-        (tclTHEN
+        (Proofview.V82.of_tactic (Tacticals.New.tclTHEN
 	   (* Normalized sums associate on the right *)
-	   (tclREPEAT
-	      (tclTHENFIRST
+	   (Tacticals.New.tclREPEAT
+	      (Tacticals.New.tclTHENFIRST
 		 (apply (mkApp(Universes.constr_of_global (build_coq_f_equal2 ()),
 		               [| th.th_a; th.th_a; th.th_a;
 				  th.th_plus |])))
-		 (Proofview.V82.of_tactic reflexivity)))
-	   (tclTRY
-	      (tclTHENLAST
+		 reflexivity))
+	   (Tacticals.New.tclTRY
+	      (Tacticals.New.tclTHENLAST
 		 (apply (mkApp(Universes.constr_of_global (build_coq_f_equal2 ()),
 			       [| th.th_a; th.th_a; th.th_a;
 				  th.th_plus |])))
-		 (Proofview.V82.of_tactic reflexivity))))))
+		 reflexivity))))))
 
 let guess_equiv_tac th =
-  (tclORELSE (apply (mkLApp(coq_seq_refl,
+  (tclORELSE (Proofview.V82.of_tactic (apply (mkLApp(coq_seq_refl,
 			    [| th.th_a; (unbox th.th_equiv);
-			       (unbox th.th_setoid_th)|])))
+			       (unbox th.th_setoid_th)|]))))
      (tclTHEN
 	polynom_unfold_tac
-	(tclREPEAT
-	   (tclORELSE
+	(Proofview.V82.of_tactic (Tacticals.New.tclREPEAT
+	   (Tacticals.New.tclORELSE
 	      (apply (unbox th.th_morph).plusm)
-	      (apply (unbox th.th_morph).multm)))))
+	      (apply (unbox th.th_morph).multm))))))
 
 let match_with_equiv c = match (kind_of_term c) with
   | App (e,a) ->
