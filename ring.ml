@@ -35,7 +35,7 @@ open Quote
 open Mod_subst
 
 let mt_evd = Evd.empty
-let constr_of c = fst (Constrintern.interp_constr mt_evd (Global.env()) c)
+let constr_of c = fst (Constrintern.interp_constr (Global.env()) mt_evd c)
 
 let ring_dir = ["LegacyRing"]
 let setoids_dir = ["Coq";"Setoids"]
