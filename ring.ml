@@ -289,7 +289,7 @@ let safe_pf_conv_x gl c1 c2 = try pf_conv_x gl c1 c2 with _ -> false
 (* Add a Ring or a Semi-Ring to the database after a type verification *)
 
 let implement_theory env t th args =
-  is_conv env Evd.empty (Typing.type_of env Evd.empty t) (mkLApp (th, args))
+  is_conv env Evd.empty (Typing.unsafe_type_of env Evd.empty t) (mkLApp (th, args))
 
 (* (\* The following test checks whether the provided morphism is the default *)
 (*    one for the given operation. In principle the test is too strict, since *)
@@ -890,10 +890,10 @@ let polynom lc gl =
 	  with Hipattern.NoEquationFound | Exit ->
 	          (match match_with_equiv (pf_concl gl) with
 		     | Some (equiv, c1::args) ->
-			 let t = (pf_type_of gl c1) in
+			 let t = (pf_unsafe_type_of gl c1) in
 			 let th = (guess_theory t) in
 			   if List.exists
-			     (fun c2 -> not (safe_pf_conv_x gl t (pf_type_of gl c2))) args
+			     (fun c2 -> not (safe_pf_conv_x gl t (pf_unsafe_type_of gl c2))) args
 			   then
 			     errorlabstrm "Ring :"
 			       (str" All terms must have the same type");
@@ -903,10 +903,10 @@ let polynom lc gl =
     (* Elsewhere, guess the theory, check that all terms have the same type
        and apply raw_polynom *)
     | c :: lc' ->
-	let t = pf_type_of gl c in
+	let t = pf_unsafe_type_of gl c in
 	let th = guess_theory t in
 	  if List.exists
-	    (fun c1 -> not (safe_pf_conv_x gl t (pf_type_of gl c1))) lc'
+	    (fun c1 -> not (safe_pf_conv_x gl t (pf_unsafe_type_of gl c1))) lc'
 	  then
 	    errorlabstrm "Ring :"
 	      (str" All terms must have the same type");
