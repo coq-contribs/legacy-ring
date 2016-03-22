@@ -50,8 +50,8 @@ Save S_to_plus_one.
    exp is already O and only for those occurrences than can be reached by going
    down plus and mult operations  *)
 Ltac rewrite_S_to_plus_term t :=
-  match constr:t with
-  | 1 => constr:1
+  match constr:(t) with
+  | 1 => constr:(1)
   | (S ?X1) =>
       let t1 := rewrite_S_to_plus_term X1 in
       constr:(1 + t1)
@@ -63,7 +63,7 @@ Ltac rewrite_S_to_plus_term t :=
       let t1 := rewrite_S_to_plus_term X1
       with t2 := rewrite_S_to_plus_term X2 in
       constr:(t1 * t2)
-  | _ => constr:t
+  | _ => constr:(t)
   end.
 
 (* Apply S_to_plus on both sides of an equality *)

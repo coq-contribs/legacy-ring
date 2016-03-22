@@ -11,6 +11,7 @@
 open Quote
 open Ring
 open Tacticals
+open Constrarg
 
 DECLARE PLUGIN "legacy_ring_plugin"
 

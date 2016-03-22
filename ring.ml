@@ -828,14 +828,14 @@ let raw_polynom th op lc gl =
 		 [ tac;
                    Proofview.V82.of_tactic (exact_check c'i_eq_c''i)]))
 )
-      lc ltriplets polynom_unfold_tac
+      lc ltriplets (Proofview.V82.of_tactic polynom_unfold_tac)
   in
   polynom_tac gl
 
 let guess_eq_tac th =
   (tclORELSE (Proofview.V82.of_tactic reflexivity)
      (tclTHEN
-	polynom_unfold_tac
+	(Proofview.V82.of_tactic polynom_unfold_tac)
         (Proofview.V82.of_tactic (Tacticals.New.tclTHEN
 	   (* Normalized sums associate on the right *)
 	   (Tacticals.New.tclREPEAT
@@ -856,7 +856,7 @@ let guess_equiv_tac th =
 			    [| th.th_a; (unbox th.th_equiv);
 			       (unbox th.th_setoid_th)|]))))
      (tclTHEN
-	polynom_unfold_tac
+	(Proofview.V82.of_tactic polynom_unfold_tac)
 	(Proofview.V82.of_tactic (Tacticals.New.tclREPEAT
 	   (Tacticals.New.tclORELSE
 	      (apply (unbox th.th_morph).plusm)
@@ -910,4 +910,4 @@ let polynom lc gl =
 	  then
 	    errorlabstrm "Ring :"
 	      (str" All terms must have the same type");
-	  (tclTHEN (raw_polynom th None lc) polynom_unfold_tac) gl
+	  (tclTHEN (raw_polynom th None lc) (Proofview.V82.of_tactic polynom_unfold_tac)) gl
