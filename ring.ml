@@ -31,7 +31,7 @@ open Tacred
 open Tactics
 open Pattern
 open Nametab
-open Quote
+open Quote_plugin.Quote
 open Mod_subst
 
 let mt_evd = Evd.empty
