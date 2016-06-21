@@ -8,7 +8,7 @@
 
 (*i camlp4deps: "grammar/grammar.cma" i*)
 
-open Quote
+open Quote_plugin.Quote
 open Ring
 open Tacticals
 open Constrarg
