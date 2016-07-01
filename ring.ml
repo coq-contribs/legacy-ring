@@ -762,12 +762,12 @@ let constants_to_unfold =
 open RedFlags
 let polynom_unfold_tac =
   let flags =
-    (mkflags(fBETA::fIOTA::(List.map fCONST constants_to_unfold))) in
+    (mkflags(fBETA::fMATCH::fFIX::fCOFIX::(List.map fCONST constants_to_unfold))) in
   reduct_in_concl (cbv_norm_flags flags,DEFAULTcast)
 
 let polynom_unfold_tac_in_term gl =
   let flags =
-    (mkflags(fBETA::fIOTA::fZETA::(List.map fCONST constants_to_unfold)))
+    (mkflags(fBETA::fMATCH::fFIX::fCOFIX::fZETA::(List.map fCONST constants_to_unfold)))
   in
   cbv_norm_flags flags (pf_env gl) (project gl)
 
