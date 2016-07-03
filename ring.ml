@@ -9,7 +9,7 @@
 (* ML part of the Ring tactic *)
 
 open Pp
-open Errors
+open CErrors
 open Util
 open Flags
 open Term
@@ -26,7 +26,7 @@ open Equality
 open Vernacinterp
 open Vernacexpr
 open Libobject
-open Closure
+open CClosure
 open Tacred
 open Tactics
 open Pattern
@@ -728,7 +728,7 @@ module SectionPathSet =
 	   end)
 
 (* Avec l'uniformisation des red_kind, on perd ici sur la structure
-   SectionPathSet; peut-être faudra-t-il la déplacer dans Closure *)
+   SectionPathSet; peut-être faudra-t-il la déplacer dans CClosure *)
 let constants_to_unfold =
 (*  List.fold_right SectionPathSet.add *)
   let transform s =
