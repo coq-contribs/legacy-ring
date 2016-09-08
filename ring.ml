@@ -269,7 +269,7 @@ let guess_theory a =
   try
     theories_map_find a
   with Not_found ->
-    errorlabstrm "Ring"
+    user_err ~hdr:"Ring"
       (str "No Declared Ring Theory for " ++
 	 pr_lconstr a ++ fnl () ++
 	 str "Use Add [Semi] Ring to declare it")
@@ -307,7 +307,7 @@ let states_compatibility_for env plus mult opp morphs =
    | _,_ -> assert false)
 
 let add_theory want_ring want_abstract want_setoid a aequiv asetth amorph aplus amult aone azero aopp aeq t cset =
-  if theories_map_mem a then errorlabstrm "Add Semi Ring"
+  if theories_map_mem a then user_err ~hdr:"Add Semi Ring"
     (str "A (Semi-)(Setoid-)Ring Structure is already declared for " ++
        pr_lconstr a);
   let env = Global.env () in
@@ -319,7 +319,7 @@ let add_theory want_ring want_abstract want_setoid a aequiv asetth amorph aplus 
 	  [| a; (unbox aequiv) |]) ||
         not (states_compatibility_for env aplus amult aopp (unbox amorph))
         )) then
-      errorlabstrm "addring" (str "Not a valid Setoid-Ring theory");
+      user_err ~hdr:"addring" (str "Not a valid Setoid-Ring theory");
     if (not want_ring && want_setoid && (
         not (implement_theory env t coq_Semi_Setoid_Ring_Theory
 	  [| a; (unbox aequiv); aplus; amult; aone; azero; aeq|]) ||
@@ -327,15 +327,15 @@ let add_theory want_ring want_abstract want_setoid a aequiv asetth amorph aplus 
 	  [| a; (unbox aequiv) |]) ||
         not (states_compatibility_for env aplus amult aopp (unbox amorph))))
     then
-      errorlabstrm "addring" (str "Not a valid Semi-Setoid-Ring theory");
+      user_err ~hdr:"addring" (str "Not a valid Semi-Setoid-Ring theory");
     if (want_ring && not want_setoid &&
 	not (implement_theory env t coq_Ring_Theory
 	  [| a; aplus; amult; aone; azero; (unbox aopp); aeq |])) then
-      errorlabstrm "addring" (str "Not a valid Ring theory");
+      user_err ~hdr:"addring" (str "Not a valid Ring theory");
     if (not want_ring && not want_setoid &&
 	not (implement_theory env t coq_Semi_Ring_Theory
 	  [| a; aplus; amult; aone; azero; aeq |])) then
-      errorlabstrm "addring" (str "Not a valid Semi-Ring theory");
+      user_err ~hdr:"addring" (str "Not a valid Semi-Ring theory");
     Lib.add_anonymous_leaf
       (theory_to_obj
 	 (a, { th_ring = want_ring;
@@ -895,10 +895,10 @@ let polynom lc gl =
 			   if List.exists
 			     (fun c2 -> not (safe_pf_conv_x gl t (pf_unsafe_type_of gl c2))) args
 			   then
-			     errorlabstrm "Ring :"
+			     user_err ~hdr:"Ring :"
 			       (str" All terms must have the same type");
 			   (tclTHEN (raw_polynom th None (c1::args)) (guess_equiv_tac th)) gl
-		     | _ -> errorlabstrm "polynom :"
+		     | _ -> user_err ~hdr:"polynom :"
 			 (str" This goal is not an equality nor a setoid equivalence")))
     (* Elsewhere, guess the theory, check that all terms have the same type
        and apply raw_polynom *)
@@ -908,6 +908,6 @@ let polynom lc gl =
 	  if List.exists
 	    (fun c1 -> not (safe_pf_conv_x gl t (pf_unsafe_type_of gl c1))) lc'
 	  then
-	    errorlabstrm "Ring :"
+	    user_err ~hdr:"Ring :"
 	      (str" All terms must have the same type");
 	  (tclTHEN (raw_polynom th None lc) (Proofview.V82.of_tactic polynom_unfold_tac)) gl
