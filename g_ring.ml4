@@ -11,7 +11,7 @@
 open Quote_plugin.Quote
 open Ring
 open Tacticals
-open Constrarg
+open Stdarg
 
 DECLARE PLUGIN "legacy_ring_plugin"
 
