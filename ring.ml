@@ -381,7 +381,7 @@ let build_spolynom gl th lc =
   (* aux creates the spolynom p by a recursive destructuration of c
      and builds the varmap with side-effects *)
   let rec aux c =
-    match (kind_of_term (strip_outer_cast c)) with
+    match (kind_of_term (Termops.strip_outer_cast c)) with
       | App (binop,[|c1; c2|]) when safe_pf_conv_x gl binop th.th_plus ->
 	  mkLApp(coq_SPplus, [|th.th_a; aux c1; aux c2 |])
       | App (binop,[|c1; c2|]) when safe_pf_conv_x gl binop th.th_mult ->
@@ -435,7 +435,7 @@ let build_polynom gl th lc =
   let varlist = ref ([] : constr list) in (* list of variables *)
   let counter = ref 1 in (* number of variables created + 1 *)
   let rec aux c =
-    match (kind_of_term (strip_outer_cast c)) with
+    match (kind_of_term (Termops.strip_outer_cast c)) with
       | App (binop, [|c1; c2|]) when safe_pf_conv_x gl binop th.th_plus ->
 	  mkLApp(coq_Pplus, [|th.th_a; aux c1; aux c2 |])
       | App (binop, [|c1; c2|]) when safe_pf_conv_x gl binop th.th_mult ->
@@ -501,7 +501,7 @@ let build_aspolynom gl th lc =
   (* aux creates the aspolynom p by a recursive destructuration of c
      and builds the varmap with side-effects *)
   let rec aux c =
-    match (kind_of_term (strip_outer_cast c)) with
+    match (kind_of_term (Termops.strip_outer_cast c)) with
       | App (binop, [|c1; c2|]) when safe_pf_conv_x gl binop th.th_plus ->
 	  mkLApp(coq_ASPplus, [| aux c1; aux c2 |])
       | App (binop, [|c1; c2|]) when safe_pf_conv_x gl binop th.th_mult ->
@@ -553,7 +553,7 @@ let build_apolynom gl th lc =
   let varlist = ref ([] : constr list) in (* list of variables *)
   let counter = ref 1 in (* number of variables created + 1 *)
   let rec aux c =
-    match (kind_of_term (strip_outer_cast c)) with
+    match (kind_of_term (Termops.strip_outer_cast c)) with
       | App (binop, [|c1; c2|]) when safe_pf_conv_x gl binop th.th_plus ->
 	  mkLApp(coq_APplus, [| aux c1; aux c2 |])
       | App (binop, [|c1; c2|]) when safe_pf_conv_x gl binop th.th_mult ->
@@ -614,7 +614,7 @@ let build_setpolynom gl th lc =
   let varlist = ref ([] : constr list) in (* list of variables *)
   let counter = ref 1 in (* number of variables created + 1 *)
   let rec aux c =
-    match (kind_of_term (strip_outer_cast c)) with
+    match (kind_of_term (Termops.strip_outer_cast c)) with
       | App (binop, [|c1; c2|]) when safe_pf_conv_x gl binop th.th_plus ->
 	  mkLApp(coq_SetPplus, [|th.th_a; aux c1; aux c2 |])
       | App (binop, [|c1; c2|]) when safe_pf_conv_x gl binop th.th_mult ->
@@ -681,7 +681,7 @@ let build_setspolynom gl th lc =
   let varlist = ref ([] : constr list) in (* list of variables *)
   let counter = ref 1 in (* number of variables created + 1 *)
   let rec aux c =
-    match (kind_of_term (strip_outer_cast c)) with
+    match (kind_of_term (Termops.strip_outer_cast c)) with
       | App (binop, [|c1; c2|]) when safe_pf_conv_x gl binop th.th_plus ->
 	  mkLApp(coq_SetSPplus, [|th.th_a; aux c1; aux c2 |])
       | App (binop, [|c1; c2|]) when safe_pf_conv_x gl binop th.th_mult ->
