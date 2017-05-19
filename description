@@ -2,7 +2,10 @@ Name: LegacyRing
 Title: The former implementation of the ring tactic
 Author: Patrick Loiseleur
 Institution: INRIA Rocquencourt and University Paris-Sud
-Date: 1998-5
 Description: Tactics to decide equality and simplify polynomial
   expressions over an arbitrary commutative ring. This generalizes a
   previous tactics by Samuel Boutin.
+Date: 1998-5
+Version: Coq 6.2
+Category: Miscellaneous/Coq Extensions
+Category: Computer Science/Decision Procedures
