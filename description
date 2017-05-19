@@ -1,5 +1,11 @@
 Name: LegacyRing
 Title: The former implementation of the ring tactic
-Author: Bruno Barras and Benjamin Gregoire (?)
-Institution: INRIA Rocquencourt
-Description:
+Author: Patrick Loiseleur
+Institution: INRIA Rocquencourt and University Paris-Sud
+Description: A tactic to simplify polynomial expressions in an
+  arbitrary commutative ring. This generalizes a
+  previous similar tactic by Samuel Boutin.
+Date: 1998-5
+Version: Coq 6.2
+Category: Miscellaneous/Coq Extensions
+Category: Computer Science/Decision Procedures
