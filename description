@@ -1,5 +1,8 @@
 Name: LegacyRing
 Title: The former implementation of the ring tactic
-Author: Bruno Barras and Benjamin Gregoire (?)
-Institution: INRIA Rocquencourt
-Description:
+Author: Patrick Loiseleur
+Institution: INRIA Rocquencourt and University Paris-Sud
+Date: 1998-5
+Description: Tactics to decide equality and simplify polynomial
+  expressions over an arbitrary commutative ring. This generalizes a
+  previous tactics by Samuel Boutin.
