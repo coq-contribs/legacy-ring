@@ -7,5 +7,7 @@ Description: Tactics to decide equality and simplify polynomial
   previous tactics by Samuel Boutin.
 Date: 1998-5
 Version: Coq 6.2
+Category: Mathematics/Arithmetic and Number Theory/Rational numbers
 Category: Miscellaneous/Coq Extensions
 Category: Computer Science/Decision Procedures
+Status: Unmaintained
